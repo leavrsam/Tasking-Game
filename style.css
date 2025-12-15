@@ -1,0 +1,120 @@
+:root {
+    --primary-color: #4a90e2;
+    --background-color: #f0f2f5;
+    --card-bg: #ffffff;
+    --text-color: #333333;
+    --accent-color: #ffcc00;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: var(--background-color);
+    color: var(--text-color);
+    margin: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    overflow-x: hidden;
+}
+
+#app {
+    background: var(--card-bg);
+    width: 90%;
+    max-width: 400px;
+    padding: 2rem;
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    text-align: center;
+}
+
+header h1 {
+    margin-top: 0;
+    color: var(--primary-color);
+}
+
+input[type="text"] {
+    width: 100%;
+    padding: 12px;
+    margin: 10px 0;
+    border: 2px solid #ddd;
+    border-radius: 6px;
+    font-size: 1.2rem;
+    text-align: center;
+    box-sizing: border-box;
+}
+
+input[type="text"]:focus {
+    border-color: var(--primary-color);
+    outline: none;
+}
+
+button {
+    background-color: var(--primary-color);
+    color: white;
+    border: none;
+    padding: 12px 24px;
+    font-size: 1rem;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    width: 100%;
+    margin-top: 10px;
+}
+
+button:hover {
+    background-color: #357abd;
+}
+
+.hidden {
+    display: none;
+}
+
+#result-section {
+    animation: fadeIn 0.5s;
+}
+
+#result-text {
+    font-size: 1.5rem;
+    margin: 20px 0;
+    color: var(--primary-color);
+}
+
+#admin-section {
+    margin-top: 30px;
+    border-top: 1px solid #eee;
+    padding-top: 10px;
+    font-size: 0.9rem;
+    color: #666;
+    text-align: left;
+}
+
+#admin-section summary {
+    cursor: pointer;
+    margin-bottom: 10px;
+}
+
+.admin-content {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* Flashing effect class */
+.party-mode {
+    animation: rainbow 1s linear infinite;
+}
+
+@keyframes rainbow {
+    0% { background-color: #ff0000; }
+    20% { background-color: #ff9900; }
+    40% { background-color: #ffff00; }
+    60% { background-color: #33cc33; }
+    80% { background-color: #3399ff; }
+    100% { background-color: #cc33cc; }
+}

@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tasking Game</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#4a90e2">
+</head>
+<body>
+    <div id="app">
+        <header>
+            <h1>Tasking Game</h1>
+        </header>
+
+        <main>
+            <!-- Input Section -->
+            <section id="input-section">
+                <p>Enter your code below:</p>
+                <input type="text" id="code-input" placeholder="e.g. 001" autocomplete="off">
+                <button id="submit-btn">Submit</button>
+            </section>
+
+            <!-- Result Section (Hidden by default) -->
+            <section id="result-section" class="hidden">
+                <div id="result-content">
+                    <h2 id="result-text"></h2>
+                    <button id="reset-btn">Enter Another Code</button>
+                </div>
+            </section>
+        </main>
+
+        <!-- Admin / Settings Section -->
+        <details id="admin-section">
+            <summary>Admin Settings</summary>
+            <div class="admin-content">
+                <h3>Load Codes</h3>
+                <p>Upload a CSV file with "Code" and "Prompt" columns.</p>
+                <input type="file" id="csv-upload" accept=".csv">
+                <p id="upload-status"></p>
+                <button id="clear-data-btn">Clear All Data</button>
+            </div>
+        </details>
+    </div>
+
+    <!-- Scripts -->
+    <script src="confetti.browser.min.js"></script> <!-- Will download this -->
+    <script src="app.js"></script>
+    <script>
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('sw.js')
+                .then(reg => console.log('Service Worker Registered'))
+                .catch(err => console.log('Service Worker Failed', err));
+        }
+    </script>
+</body>
+</html>
