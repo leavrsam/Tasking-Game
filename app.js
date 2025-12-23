@@ -152,7 +152,8 @@ document.addEventListener('DOMContentLoaded', () => {
         return data;
     }
 
-    function clearData() {
+    function clearData(e) {
+        if (e) e.preventDefault();
         if (confirm(`Clear all codes for List ${currentList}?`)) {
             localStorage.removeItem(getStorageKey());
             taskData = {};
