@@ -1,38 +1,76 @@
 document.addEventListener('DOMContentLoaded', () => {
     const codeInput = document.getElementById('code-input');
-    const submitBtn = document.getElementById('submit-btn');
-    const resetBtn = document.getElementById('reset-btn');
     const resultSection = document.getElementById('result-section');
     const inputSection = document.getElementById('input-section');
     const resultText = document.getElementById('result-text');
+    const header = document.getElementById('main-header') || document.querySelector('header');
+    const actionBtn = document.getElementById('action-btn');
     const csvUpload = document.getElementById('csv-upload');
     const uploadStatus = document.getElementById('upload-status');
     const clearDataBtn = document.getElementById('clear-data-btn');
+    const listBtns = document.querySelectorAll('.list-btn');
 
-    // Load data from localStorage
-    let taskData = JSON.parse(localStorage.getItem('taskData')) || {};
+    // Multi-list support
+    let currentList = 1;
+    let isResultMode = false;
 
-    // Auto-load default CSV if storage is empty
-    if (Object.keys(taskData).length === 0) {
-        fetch('./tasks.csv')
-            .then(response => {
-                if (response.ok) return response.text();
-            })
-            .then(text => {
-                if (text) {
-                    const parsed = parseCSV(text);
-                    if (Object.keys(parsed).length > 0) {
-                        taskData = parsed;
-                        localStorage.setItem('taskData', JSON.stringify(taskData));
-                        console.log('Default tasks loaded:', Object.keys(taskData).length);
-                    }
-                }
-            })
-            .catch(err => console.log('No default tasks.csv found or fetch failed', err));
+    // Get storage key for current list
+    function getStorageKey() {
+        return `taskData${currentList}`;
     }
 
-    submitBtn.addEventListener('click', handleCodeSubmit);
-    resetBtn.addEventListener('click', resetApp);
+    // Load data for current list
+    function loadTaskData() {
+        return JSON.parse(localStorage.getItem(getStorageKey())) || {};
+    }
+
+    // Save data for current list
+    function saveTaskData(data) {
+        localStorage.setItem(getStorageKey(), JSON.stringify(data));
+    }
+
+    let taskData = loadTaskData();
+
+    // Switch active list
+    function switchList(listNum) {
+        currentList = listNum;
+        taskData = loadTaskData();
+
+        // Update button states
+        listBtns.forEach(btn => {
+            btn.classList.toggle('active', parseInt(btn.dataset.list) === listNum);
+        });
+
+        uploadStatus.textContent = `List ${listNum} selected`;
+    }
+
+    // List button click handlers
+    listBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
+            switchList(parseInt(btn.dataset.list));
+        });
+    });
+
+    // Action button handler
+    if (actionBtn) {
+        actionBtn.addEventListener('click', () => {
+            if (isResultMode) {
+                resetApp();
+            } else {
+                handleCodeSubmit();
+            }
+        });
+    }
+
+    // Enter key to submit
+    if (codeInput) {
+        codeInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                handleCodeSubmit();
+            }
+        });
+    }
+
     csvUpload.addEventListener('change', handleFileUpload);
     clearDataBtn.addEventListener('click', clearData);
 
@@ -42,10 +80,16 @@ document.addEventListener('DOMContentLoaded', () => {
 
         inputSection.classList.add('hidden');
         resultSection.classList.remove('hidden');
+        if (header) header.style.display = 'none';
+
+        isResultMode = true;
+        actionBtn.textContent = 'Enter Another Code';
 
         if (taskData[code]) {
             resultText.textContent = taskData[code];
-            triggerWinEffects();
+            if (Math.random() > 0.5) {
+                triggerWinEffects();
+            }
         } else {
             resultText.textContent = "No Task listed.";
         }
@@ -55,11 +99,14 @@ document.addEventListener('DOMContentLoaded', () => {
         codeInput.value = '';
         resultSection.classList.add('hidden');
         inputSection.classList.remove('hidden');
+        if (header) header.style.display = '';
         document.body.classList.remove('party-mode');
+        isResultMode = false;
+        actionBtn.textContent = 'Submit';
+        codeInput.focus();
     }
 
     function triggerWinEffects() {
-        // Confetti
         if (window.confetti) {
             window.confetti({
                 particleCount: 150,
@@ -67,9 +114,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 origin: { y: 0.6 }
             });
         }
-
-        // Flashing Background
-        // document.body.classList.add('party-mode'); // Optional: bit intense, maybe just confetti is code
     }
 
     function handleFileUpload(event) {
@@ -82,8 +126,8 @@ document.addEventListener('DOMContentLoaded', () => {
             try {
                 const parsed = parseCSV(text);
                 taskData = { ...taskData, ...parsed };
-                localStorage.setItem('taskData', JSON.stringify(taskData));
-                uploadStatus.textContent = `Loaded ${Object.keys(parsed).length} codes!`;
+                saveTaskData(taskData);
+                uploadStatus.textContent = `Loaded ${Object.keys(parsed).length} codes to List ${currentList}!`;
             } catch (err) {
                 uploadStatus.textContent = "Error parsing CSV.";
                 console.error(err);
@@ -93,14 +137,12 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function parseCSV(text) {
-        // Simple parser: assuming "Code,Prompt" format
         const lines = text.split('\n');
         const data = {};
         lines.forEach(line => {
             const parts = line.split(',');
             if (parts.length >= 2) {
                 const code = parts[0].trim();
-                // Join the rest in case prompt has commas
                 const prompt = parts.slice(1).join(',').trim();
                 if (code && prompt) {
                     data[code] = prompt;
@@ -111,10 +153,10 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function clearData() {
-        if (confirm('Are you sure you want to clear all loaded codes?')) {
-            localStorage.removeItem('taskData');
+        if (confirm(`Clear all codes for List ${currentList}?`)) {
+            localStorage.removeItem(getStorageKey());
             taskData = {};
-            uploadStatus.textContent = "Data cleared.";
+            uploadStatus.textContent = `List ${currentList} cleared.`;
         }
     }
 });

@@ -18,14 +18,24 @@ body {
     overflow-x: hidden;
 }
 
+/* Mobile: position at top so keyboard doesn't cover input */
+@media (max-width: 600px) {
+    body {
+        align-items: flex-start;
+        padding-top: 40px;
+    }
+}
+
 #app {
     background: var(--card-bg);
     width: 90%;
     max-width: 400px;
     padding: 2rem;
     border-radius: 12px;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
     text-align: center;
+    padding-bottom: 90px;
+    /* Space for fixed buttons */
 }
 
 header h1 {
@@ -39,7 +49,7 @@ input[type="text"] {
     margin: 10px 0;
     border: 2px solid #ddd;
     border-radius: 6px;
-    font-size: 1.2rem;
+    font-size: 2.4rem;
     text-align: center;
     box-sizing: border-box;
 }
@@ -59,7 +69,41 @@ button {
     cursor: pointer;
     transition: background-color 0.3s;
     width: 100%;
-    margin-top: 10px;
+}
+
+#action-btn {
+    position: fixed;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 90%;
+    max-width: 400px;
+    margin-top: 0;
+    z-index: 1000;
+}
+
+#list-selector {
+    position: fixed;
+    bottom: 80px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 10px;
+    z-index: 1000;
+}
+
+.list-btn {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    font-size: 1.2rem;
+    font-weight: bold;
+    padding: 0;
+}
+
+.list-btn.active {
+    background-color: #2c6eb5;
+    box-shadow: 0 0 10px rgba(74, 144, 226, 0.5);
 }
 
 button:hover {
@@ -75,7 +119,7 @@ button:hover {
 }
 
 #result-text {
-    font-size: 1.5rem;
+    font-size: 3.0rem;
     margin: 20px 0;
     color: var(--primary-color);
 }
@@ -101,8 +145,15 @@ button:hover {
 }
 
 @keyframes fadeIn {
-    from { opacity: 0; transform: translateY(10px); }
-    to { opacity: 1; transform: translateY(0); }
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
 
 /* Flashing effect class */
@@ -111,10 +162,27 @@ button:hover {
 }
 
 @keyframes rainbow {
-    0% { background-color: #ff0000; }
-    20% { background-color: #ff9900; }
-    40% { background-color: #ffff00; }
-    60% { background-color: #33cc33; }
-    80% { background-color: #3399ff; }
-    100% { background-color: #cc33cc; }
+    0% {
+        background-color: #ff0000;
+    }
+
+    20% {
+        background-color: #ff9900;
+    }
+
+    40% {
+        background-color: #ffff00;
+    }
+
+    60% {
+        background-color: #33cc33;
+    }
+
+    80% {
+        background-color: #3399ff;
+    }
+
+    100% {
+        background-color: #cc33cc;
+    }
 }
