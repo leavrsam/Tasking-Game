@@ -152,19 +152,34 @@ document.addEventListener('DOMContentLoaded', () => {
         return data;
     }
 
+    // Custom Modal Elements
+    const confirmModal = document.getElementById('confirm-modal');
+    const confirmYes = document.getElementById('confirm-yes');
+    const confirmNo = document.getElementById('confirm-no');
+    const confirmMessage = document.getElementById('confirm-message');
+
     function clearData(e) {
         if (e) {
             e.preventDefault();
             e.stopPropagation();
         }
+        confirmMessage.textContent = `Clear all codes for List ${currentList}?`;
+        confirmModal.classList.remove('hidden');
+    }
 
-        // Timeout ensures the touch event finishes before alert blocks execution
-        setTimeout(() => {
-            if (confirm(`Clear all codes for List ${currentList}?`)) {
-                localStorage.removeItem(getStorageKey());
-                taskData = {};
-                uploadStatus.textContent = `List ${currentList} cleared.`;
-            }
-        }, 10);
+    // Modal Event Listeners
+    if (confirmYes) {
+        confirmYes.addEventListener('click', () => {
+            localStorage.removeItem(getStorageKey());
+            taskData = {};
+            uploadStatus.textContent = `List ${currentList} cleared.`;
+            confirmModal.classList.add('hidden');
+        });
+    }
+
+    if (confirmNo) {
+        confirmNo.addEventListener('click', () => {
+            confirmModal.classList.add('hidden');
+        });
     }
 });
