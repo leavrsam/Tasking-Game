@@ -46,8 +46,16 @@
             <summary>Admin Settings</summary>
             <div class="admin-content">
                 <h3>Load Codes to List</h3>
-                <p><strong>Step 1:</strong> Select a list (1-4) using the buttons below.</p>
-                <p><strong>Step 2:</strong> Upload a CSV file with "Code" and "Prompt" columns.</p>
+                <p>Select a list below to upload to:</p>
+
+                <div class="admin-list-selector">
+                    <button class="admin-list-btn active" data-list="1">1</button>
+                    <button class="admin-list-btn" data-list="2">2</button>
+                    <button class="admin-list-btn" data-list="3">3</button>
+                    <button class="admin-list-btn" data-list="4">4</button>
+                </div>
+
+                <p>Then upload a CSV file with "Code" and "Prompt" columns:</p>
                 <p id="upload-status">List 1 selected</p>
                 <input type="file" id="csv-upload" accept=".csv">
                 <button id="clear-data-btn" type="button">Clear This List</button>

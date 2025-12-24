@@ -1,4 +1,4 @@
-const CACHE_NAME = 'task-game-v18';
+const CACHE_NAME = 'task-game-v19';
 const ASSETS = [
     './',
     './index.html',

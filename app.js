@@ -9,6 +9,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const uploadStatus = document.getElementById('upload-status');
     const clearDataBtn = document.getElementById('clear-data-btn');
     const listBtns = document.querySelectorAll('.list-btn');
+    const adminListBtns = document.querySelectorAll('.admin-list-btn');
 
     // Multi-list support
     let currentList = 1;
@@ -36,16 +37,28 @@ document.addEventListener('DOMContentLoaded', () => {
         currentList = listNum;
         taskData = loadTaskData();
 
-        // Update button states
+        // Update main button states
         listBtns.forEach(btn => {
+            btn.classList.toggle('active', parseInt(btn.dataset.list) === listNum);
+        });
+
+        // Update admin button states
+        adminListBtns.forEach(btn => {
             btn.classList.toggle('active', parseInt(btn.dataset.list) === listNum);
         });
 
         uploadStatus.textContent = `List ${listNum} selected`;
     }
 
-    // List button click handlers
+    // List button click handlers (Main)
     listBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
+            switchList(parseInt(btn.dataset.list));
+        });
+    });
+
+    // List button click handlers (Admin)
+    adminListBtns.forEach(btn => {
         btn.addEventListener('click', () => {
             switchList(parseInt(btn.dataset.list));
         });
