@@ -262,10 +262,16 @@ button:hover {
     width: 100%;
     height: 100%;
     background: rgba(0, 0, 0, 0.5);
-    display: flex;
+    display: none;
+    /* Changed from flex to none by default */
     justify-content: center;
     align-items: center;
     z-index: 2000;
+}
+
+#confirm-modal:not(.hidden) {
+    display: flex;
+    /* Only flex when clearly visible */
 }
 
 .modal-content {
