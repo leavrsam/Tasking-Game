@@ -5,64 +5,67 @@ document.addEventListener('DOMContentLoaded', () => {
     const resultText = document.getElementById('result-text');
     const header = document.getElementById('main-header') || document.querySelector('header');
     const actionBtn = document.getElementById('action-btn');
-    const csvUpload = document.getElementById('csv-upload');
-    const uploadStatus = document.getElementById('upload-status');
-    const clearDataBtn = document.getElementById('clear-data-btn');
     const listBtns = document.querySelectorAll('.list-btn');
-    const adminListBtns = document.querySelectorAll('.admin-list-btn');
 
-    // Multi-list support
+    // Admin Page Elements
+    const adminToggle = document.getElementById('admin-toggle');
+    const adminPage = document.getElementById('admin-page');
+    const adminBack = document.getElementById('admin-back');
+    const csvUploads = document.querySelectorAll('.csv-upload');
+    const clearListBtns = document.querySelectorAll('.clear-list-btn');
+
+    // Modal Elements
+    const confirmModal = document.getElementById('confirm-modal');
+    const confirmYes = document.getElementById('confirm-yes');
+    const confirmNo = document.getElementById('confirm-no');
+    const confirmMessage = document.getElementById('confirm-message');
+
+    // State
     let currentList = 1;
     let isResultMode = false;
+    let pendingClearList = null;
 
-    // Get storage key for current list
-    function getStorageKey() {
-        return `taskData${currentList}`;
+    // Storage helpers
+    function getStorageKey(listNum) {
+        return `taskData${listNum}`;
     }
 
-    // Load data for current list
-    function loadTaskData() {
-        return JSON.parse(localStorage.getItem(getStorageKey())) || {};
+    function loadTaskData(listNum) {
+        return JSON.parse(localStorage.getItem(getStorageKey(listNum))) || {};
     }
 
-    // Save data for current list
-    function saveTaskData(data) {
-        localStorage.setItem(getStorageKey(), JSON.stringify(data));
+    function saveTaskData(listNum, data) {
+        localStorage.setItem(getStorageKey(listNum), JSON.stringify(data));
     }
 
-    let taskData = loadTaskData();
-
-    // Switch active list
+    // Switch active list (main app)
     function switchList(listNum) {
         currentList = listNum;
-        taskData = loadTaskData();
 
-        // Update main button states
         listBtns.forEach(btn => {
             btn.classList.toggle('active', parseInt(btn.dataset.list) === listNum);
         });
-
-        // Update admin button states
-        adminListBtns.forEach(btn => {
-            btn.classList.toggle('active', parseInt(btn.dataset.list) === listNum);
-        });
-
-        uploadStatus.textContent = `List ${listNum} selected`;
     }
 
-    // List button click handlers (Main)
+    // Main list button handlers
     listBtns.forEach(btn => {
         btn.addEventListener('click', () => {
             switchList(parseInt(btn.dataset.list));
         });
     });
 
-    // List button click handlers (Admin)
-    adminListBtns.forEach(btn => {
-        btn.addEventListener('click', () => {
-            switchList(parseInt(btn.dataset.list));
+    // Admin Page Toggle
+    if (adminToggle) {
+        adminToggle.addEventListener('click', () => {
+            adminPage.classList.remove('hidden');
         });
-    });
+    }
+
+    if (adminBack) {
+        adminBack.addEventListener('click', () => {
+            adminPage.classList.add('hidden');
+        });
+    }
 
     // Action button handler
     if (actionBtn) {
@@ -84,9 +87,6 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    csvUpload.addEventListener('change', handleFileUpload);
-    clearDataBtn.addEventListener('click', clearData);
-
     function handleCodeSubmit() {
         const code = codeInput.value.trim();
         if (!code) return;
@@ -98,6 +98,7 @@ document.addEventListener('DOMContentLoaded', () => {
         isResultMode = true;
         actionBtn.textContent = 'Enter Another Code';
 
+        const taskData = loadTaskData(currentList);
         if (taskData[code]) {
             resultText.textContent = taskData[code];
             if (Math.random() > 0.5) {
@@ -129,25 +130,36 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    function handleFileUpload(event) {
-        const file = event.target.files[0];
-        if (!file) return;
+    // Per-list file upload handlers
+    csvUploads.forEach(input => {
+        input.addEventListener('change', (event) => {
+            const listNum = parseInt(input.dataset.list);
+            const file = event.target.files[0];
+            if (!file) return;
 
-        const reader = new FileReader();
-        reader.onload = function (e) {
-            const text = e.target.result;
-            try {
-                const parsed = parseCSV(text);
-                taskData = { ...taskData, ...parsed };
-                saveTaskData(taskData);
-                uploadStatus.textContent = `Loaded ${Object.keys(parsed).length} codes to List ${currentList}!`;
-            } catch (err) {
-                uploadStatus.textContent = "Error parsing CSV.";
-                console.error(err);
-            }
-        };
-        reader.readAsText(file);
-    }
+            const statusEl = document.querySelector(`.upload-status[data-list="${listNum}"]`);
+
+            const reader = new FileReader();
+            reader.onload = function (e) {
+                const text = e.target.result;
+                try {
+                    const parsed = parseCSV(text);
+                    const existingData = loadTaskData(listNum);
+                    const mergedData = { ...existingData, ...parsed };
+                    saveTaskData(listNum, mergedData);
+                    if (statusEl) {
+                        statusEl.textContent = `Loaded ${Object.keys(parsed).length} codes!`;
+                    }
+                } catch (err) {
+                    if (statusEl) {
+                        statusEl.textContent = "Error parsing CSV.";
+                    }
+                    console.error(err);
+                }
+            };
+            reader.readAsText(file);
+        });
+    });
 
     function parseCSV(text) {
         const lines = text.split('\n');
@@ -165,33 +177,35 @@ document.addEventListener('DOMContentLoaded', () => {
         return data;
     }
 
-    // Custom Modal Elements
-    const confirmModal = document.getElementById('confirm-modal');
-    const confirmYes = document.getElementById('confirm-yes');
-    const confirmNo = document.getElementById('confirm-no');
-    const confirmMessage = document.getElementById('confirm-message');
-
-    function clearData(e) {
-        if (e) {
+    // Per-list clear handlers
+    clearListBtns.forEach(btn => {
+        btn.addEventListener('click', (e) => {
             e.preventDefault();
             e.stopPropagation();
-        }
-        confirmMessage.textContent = `Clear all codes for List ${currentList}?`;
-        confirmModal.classList.remove('hidden');
-    }
+            pendingClearList = parseInt(btn.dataset.list);
+            confirmMessage.textContent = `Clear all codes for List ${pendingClearList}?`;
+            confirmModal.classList.remove('hidden');
+        });
+    });
 
-    // Modal Event Listeners
+    // Modal handlers
     if (confirmYes) {
         confirmYes.addEventListener('click', () => {
-            localStorage.removeItem(getStorageKey());
-            taskData = {};
-            uploadStatus.textContent = `List ${currentList} cleared.`;
+            if (pendingClearList) {
+                localStorage.removeItem(getStorageKey(pendingClearList));
+                const statusEl = document.querySelector(`.upload-status[data-list="${pendingClearList}"]`);
+                if (statusEl) {
+                    statusEl.textContent = `List ${pendingClearList} cleared.`;
+                }
+                pendingClearList = null;
+            }
             confirmModal.classList.add('hidden');
         });
     }
 
     if (confirmNo) {
         confirmNo.addEventListener('click', () => {
+            pendingClearList = null;
             confirmModal.classList.add('hidden');
         });
     }

@@ -124,24 +124,91 @@ button:hover {
     color: var(--primary-color);
 }
 
-#admin-section {
-    margin-top: 30px;
-    border-top: 1px solid #eee;
-    padding-top: 10px;
+/* Admin Toggle Button */
+#admin-toggle {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    font-size: 1.5rem;
+    padding: 0;
+    z-index: 1000;
+    background-color: #6c757d;
+}
+
+/* Admin Page Overlay */
+#admin-page {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: var(--background-color);
+    z-index: 1500;
+    overflow-y: auto;
+}
+
+.admin-header {
+    background: var(--primary-color);
+    color: white;
+    padding: 15px 20px;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.admin-header h2 {
+    margin: 0;
+    font-size: 1.3rem;
+}
+
+#admin-back {
+    width: auto;
+    padding: 8px 16px;
     font-size: 0.9rem;
-    color: #666;
-    text-align: left;
+    background-color: rgba(255, 255, 255, 0.2);
 }
 
-#admin-section summary {
-    cursor: pointer;
-    margin-bottom: 10px;
-}
-
-.admin-content {
+.admin-body {
+    padding: 20px;
     display: flex;
     flex-direction: column;
-    gap: 10px;
+    gap: 20px;
+    max-width: 500px;
+    margin: 0 auto;
+}
+
+.upload-section {
+    background: var(--card-bg);
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.upload-section h3 {
+    margin-top: 0;
+    color: var(--primary-color);
+    border-bottom: 2px solid var(--primary-color);
+    padding-bottom: 10px;
+}
+
+.upload-section input[type="file"] {
+    width: 100%;
+    margin: 10px 0;
+}
+
+.upload-status {
+    display: block;
+    margin: 10px 0;
+    font-size: 0.9rem;
+    color: #666;
+}
+
+.clear-list-btn {
+    background-color: #dc3545;
+    margin-top: 10px;
 }
 
 @keyframes fadeIn {
@@ -164,32 +231,6 @@ button:hover {
 @keyframes rainbow {
     0% {
         background-color: #ff0000;
-    }
-
-    /* Admin List Selector */
-    .admin-list-selector {
-        display: flex;
-        gap: 10px;
-        justify-content: center;
-        margin: 15px 0;
-    }
-
-    .admin-list-btn {
-        width: 40px;
-        height: 40px;
-        border-radius: 50%;
-        font-size: 1rem;
-        font-weight: bold;
-        padding: 0;
-        background-color: #e0e0e0;
-        color: #333;
-        border: 2px solid transparent;
-    }
-
-    .admin-list-btn.active {
-        background-color: #2c6eb5;
-        color: white;
-        box-shadow: 0 0 5px rgba(74, 144, 226, 0.5);
     }
 
     20% {
@@ -242,6 +283,11 @@ button:hover {
     gap: 10px;
     margin-top: 20px;
     justify-content: center;
+}
+
+.modal-buttons button {
+    width: auto;
+    padding: 10px 20px;
 }
 
 #confirm-yes {

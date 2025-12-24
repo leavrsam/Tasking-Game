@@ -41,26 +41,46 @@
 
         <button id="action-btn">Submit</button>
 
-        <!-- Admin / Settings Section -->
-        <details id="admin-section">
-            <summary>Admin Settings</summary>
-            <div class="admin-content">
-                <h3>Load Codes to List</h3>
-                <p>Select a list below to upload to:</p>
+        <!-- Admin Toggle Button -->
+        <button id="admin-toggle">⚙️</button>
+    </div>
 
-                <div class="admin-list-selector">
-                    <button class="admin-list-btn active" data-list="1">1</button>
-                    <button class="admin-list-btn" data-list="2">2</button>
-                    <button class="admin-list-btn" data-list="3">3</button>
-                    <button class="admin-list-btn" data-list="4">4</button>
-                </div>
+    <!-- Admin Page (Full Screen Overlay) -->
+    <div id="admin-page" class="hidden">
+        <div class="admin-header">
+            <button id="admin-back">← Back</button>
+            <h2>Admin Settings</h2>
+        </div>
 
-                <p>Then upload a CSV file with "Code" and "Prompt" columns:</p>
-                <p id="upload-status">List 1 selected</p>
-                <input type="file" id="csv-upload" accept=".csv">
-                <button id="clear-data-btn" type="button">Clear This List</button>
+        <div class="admin-body">
+            <div class="upload-section">
+                <h3>List 1</h3>
+                <input type="file" class="csv-upload" data-list="1" accept=".csv">
+                <span class="upload-status" data-list="1">No file loaded</span>
+                <button class="clear-list-btn" type="button" data-list="1">Clear List 1</button>
             </div>
-        </details>
+
+            <div class="upload-section">
+                <h3>List 2</h3>
+                <input type="file" class="csv-upload" data-list="2" accept=".csv">
+                <span class="upload-status" data-list="2">No file loaded</span>
+                <button class="clear-list-btn" type="button" data-list="2">Clear List 2</button>
+            </div>
+
+            <div class="upload-section">
+                <h3>List 3</h3>
+                <input type="file" class="csv-upload" data-list="3" accept=".csv">
+                <span class="upload-status" data-list="3">No file loaded</span>
+                <button class="clear-list-btn" type="button" data-list="3">Clear List 3</button>
+            </div>
+
+            <div class="upload-section">
+                <h3>List 4</h3>
+                <input type="file" class="csv-upload" data-list="4" accept=".csv">
+                <span class="upload-status" data-list="4">No file loaded</span>
+                <button class="clear-list-btn" type="button" data-list="4">Clear List 4</button>
+            </div>
+        </div>
     </div>
 
     <!-- Custom Confirmation Modal -->
