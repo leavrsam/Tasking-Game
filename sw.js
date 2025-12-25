@@ -1,4 +1,4 @@
-const CACHE_NAME = 'task-game-v22';
+const CACHE_NAME = 'task-game-v24';
 const ASSETS = [
     './',
     './index.html',
@@ -8,11 +8,14 @@ const ASSETS = [
     './tasks.csv'
 ];
 
-self.addEventListener('install', (event) => {
+self.addEventListener('install', event => {
     self.skipWaiting();
     event.waitUntil(
         caches.open(CACHE_NAME)
-            .then((cache) => cache.addAll(ASSETS))
+            .then(cache => {
+                console.log('Opened cache');
+                return cache.addAll(ASSETS);
+            })
     );
 });
 
