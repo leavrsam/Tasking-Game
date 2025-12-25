@@ -30,21 +30,33 @@ body {
     background: var(--card-bg);
     width: 100%;
     min-height: 100vh;
-    padding: 2rem;
+    padding: 0 0 2rem 0;
     box-sizing: border-box;
     text-align: center;
     padding-bottom: 160px;
     /* Space for fixed buttons */
 }
 
+/* Main Header Bar */
+#main-header {
+    background-color: var(--primary-color);
+    color: white;
+    padding: 15px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
 header h1 {
-    margin-top: 40px;
-    /* Add some top margin for spacing */
-    color: var(--primary-color);
+    margin: 0;
+    font-size: 1.3rem;
+    color: white;
 }
 
 input[type="text"] {
-    width: 100%;
+    width: 90%;
     max-width: 400px;
     /* Keep input from getting too wide on desktop */
     padding: 12px;
@@ -130,22 +142,18 @@ button:hover {
 
 /* Admin Toggle Button */
 #admin-toggle {
-    position: fixed;
-    top: 20px;
-    right: 20px;
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
+    width: auto;
+    height: auto;
+    padding: 5px;
     font-size: 1.5rem;
-    padding: 0;
-    z-index: 1000;
     background: transparent;
-    color: #6c757d;
+    color: rgba(255, 255, 255, 0.8);
     transition: color 0.3s, transform 0.3s;
+    margin: 0;
 }
 
 #admin-toggle:hover {
-    color: var(--primary-color);
+    color: white;
     transform: rotate(90deg);
     background: transparent;
 }
